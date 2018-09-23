@@ -5,9 +5,18 @@
   "description": "View XMLs",
   "version": "1.0",
 
-  "permissions": [],
+  "permissions": ["tabs"],
   "browser_action": {
-    "default_icon": "img/icon.png",
-    "default_popup": "popup.html"
-  }
+    "default_icon": "img/icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*.xml",
+        "https://*/*.xml",
+        "file:///*.xml"
+      ],
+      "js": ["scripts/content.js"]
+    }
+  ]
 }
