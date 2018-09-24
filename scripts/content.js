@@ -45,7 +45,6 @@ function createHTMLElementNode(dataNode, childDataNode){
 
             var attributeWrapperDiv = document.createElement("div");
             attributeWrapperDiv.id = "xml-attribute-wrapper";
-    
             var attributeNameDiv = document.createElement("div");
             attributeNameDiv.id = "xml-attribute-name";
             attributeNameDiv.innerHTML = att.nodeName;
@@ -54,7 +53,10 @@ function createHTMLElementNode(dataNode, childDataNode){
             attributeValueDiv.id = "xml-attribute-value";
             attributeValueDiv.innerHTML = att.nodeValue;
             
+            var space = document.createTextNode('\u00A0');
+
             //Add attribute
+            attributeWrapperDiv.appendChild(space);
             attributeWrapperDiv.appendChild(attributeNameDiv);
             attributeWrapperDiv.appendChild(equals);
             attributeWrapperDiv.appendChild(quote1);
