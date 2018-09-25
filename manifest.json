@@ -5,7 +5,10 @@
   "description": "View XMLs",
   "version": "1.0",
 
-  "permissions": ["tabs"],
+  "permissions": [
+    "tabs",
+    "contextMenus"
+  ],
   "browser_action": {
     "default_icon": "img/icon.png"
   },
@@ -14,13 +17,14 @@
   ],
   "content_scripts": [
     {
+      "css":["styles/content.css"],
       "matches": [
         "http://*/*.xml",
         "https://*/*.xml",
         "file:///*.xml"
       ],
       "js": ["scripts/content.js"],
-      "css":["styles/content.css"]
+      "run_at": "document_end"
     }
   ]
 }
