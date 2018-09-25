@@ -3,6 +3,7 @@ function collapseChildren(e){
     chrome.storage.local.get(['childRgtClkIDValid', 'childClickedID'], function(result){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, {
+                type: "contextMenu",
                 message: "collapseChildren",
                 result: result});
           });
@@ -14,6 +15,7 @@ function expandChildren(e){
     chrome.storage.local.get(['childRgtClkIDValid', 'childClickedID'], function(result){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, {
+                type: "contextMenu",
                 message: "expandChildren",
                 result: result});
           });
@@ -39,8 +41,11 @@ chrome.contextMenus.create({
 
 //Listener for messages
 chrome.runtime.onMessage.addListener(function(e) {
-    if (e.message === "childRightClicked"){
-        chrome.storage.local.set({childRgtClkIDValid: true});
+    switch(e.message){
+        case "childRightClicked":
+            chrome.storage.local.set({childRgtClkIDValid: true});
+            break;
+        default:
+            console.log("Message not recognized: ", e);
     }
-        
 });

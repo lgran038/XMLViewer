@@ -77,37 +77,47 @@ function onElementClick(e){
 //Listends for messages from background script
 //NOTE: SHOULD REFACTOR. ON MESSAGE LISTENER SHOULD MAKE FUNCTION CALLS NOT APPLY LOGIC
 chrome.runtime.onMessage.addListener(function(e) {
-    
-    //Listening for collapseChildren message
-    if(e.message === "collapseChildren"){
-        //Reset childRgtClkIDValid
-        chrome.storage.local.set({childRgtClkIDValid: false});
-
-        //Collapse children if child exists and is valid
-        if (e.result.childClickedID && e.result.childRgtClkIDValid){
-            var node = document.getElementById(e.result.childClickedID);
-            var children = this.getCollapsibleChildren(node);
-            //Collapse children
-            for (child of children)
-                this.collapse(child);
-        }
+    switch(e.type){
+        case "contextMenu":
+            this.contextMenuClick(e);
+            break;
+        default:
+            console.log("Message Type not recognized: ", e);
+            break;
     }
-
-    //Listening for expandChildren message
-    if(e.message === "expandChildren"){
-        //Reset childRgtClkIDValid
-        chrome.storage.local.set({childRgtClkIDValid: false});
-
-        //Collapse children if child exists and is valid
-        if (e.result.childClickedID && e.result.childRgtClkIDValid){
-            var node = document.getElementById(e.result.childClickedID);
-            //Expand itself if collapsed
-            this.expand(node);
-            var children = this.getCollapsibleChildren(node);
-            //Expand children
-            for (child of children)
-                this.expand(child);
-        }
-    }
-
 });
+
+function contextMenuClick(e){
+    switch(e.message){
+        case "collapseChildren": //Listening for collapseChildren message
+            //Reset childRgtClkIDValid
+            chrome.storage.local.set({childRgtClkIDValid: false});
+
+            //Collapse children if child exists and is valid
+            if (e.result.childClickedID && e.result.childRgtClkIDValid){
+                var node = document.getElementById(e.result.childClickedID);
+                var children = this.getCollapsibleChildren(node);
+                //Collapse children
+                for (child of children)
+                    this.collapse(child);
+            }
+            break;
+        case "expandChildren": //Listening for expandChildren message
+            //Reset childRgtClkIDValid
+            chrome.storage.local.set({childRgtClkIDValid: false});
+
+            //Expand children if child exists and is valid
+            if (e.result.childClickedID && e.result.childRgtClkIDValid){
+                var node = document.getElementById(e.result.childClickedID);
+                //Expand itself if collapsed
+                this.expand(node);
+                var children = this.getCollapsibleChildren(node);
+                //Expand children
+                for (child of children)
+                    this.expand(child);
+            }
+            break;
+        default:
+            console.log("Message not recognized: ", e);
+    }
+}
