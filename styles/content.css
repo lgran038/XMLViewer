@@ -17,3 +17,7 @@ body{
 .html-attribute-value{
     color: rgb(250, 218, 128);
 }
+
+.html-comment{
+    color: rgb(78, 204, 53);
+}
