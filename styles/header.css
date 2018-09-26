@@ -1,0 +1,66 @@
+[id^=custom-header]{
+    background-color: rgb(48, 114, 214);
+    position: fixed;
+}
+
+#custom-header-expanded{
+    right: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#custom-header-collapsed{
+    height: 40px;
+    width: 60px;
+    right: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.pretty-print{
+    margin-top: 0px;
+}
+
+#xml-line{
+    display: flex;
+    flex-direction: row;
+}
+
+[id^=theme]{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 5pt;
+    margin-bottom: 5pt;
+    border-style: solid;
+    border-width: 1pt;
+    border-radius: 5pt;
+    border-color: lightgray;
+}
+
+#group{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 5pt;
+    color: white;
+}
+
+#group-header{
+    display: flex;
+    font-weight: bold;
+    font-size: 14pt;
+    justify-content: center;
+    align-items: center;
+}
+
+#group-header-title{
+    display: flex;
+    flex: 2;
+}
+
+#group-body{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}

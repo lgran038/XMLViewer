@@ -1,10 +1,15 @@
 //Wait until doc is loaded, then begin execution
 window.addEventListener ("load", main, false);
 
+//RemoveHeader before while doc is loading
+var header = document.getElementsByClassName("header")[0];
+header.parentNode.removeChild(header);
+
+
 //Only begins running when window loads
 function main () {
     var collapsibleRoot = document.getElementById("collapsible0");
-
+    
     //Setting root's onclick
     collapsibleRoot.children[0].children[0].onmousedown = (e) => this.onElementClick(e);
     collapsibleRoot.children[1].children[0].onmousedown = (e) => this.onElementClick(e);
