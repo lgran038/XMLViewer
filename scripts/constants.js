@@ -1,6 +1,9 @@
 const THEME_LIST = [
     {   
-        name: "Classic",
+        displayName: "Classic",
+        name: "classic",
+        fontFamily: "monospace",
+        fontSize: "13px",
         backgroundColor: "white",
         comment: "#236E25",
         tag: "#881280",
@@ -9,7 +12,10 @@ const THEME_LIST = [
         textColor: "black"
     },
     {   
-        name: "Dark",
+        displayName: "Dark",
+        name: "dark",
+        fontFamily: "consolas",
+        fontSize: "13px",
         backgroundColor: "#1B1D24",
         comment: "#4ECC35",
         tag: "#FC7C41",
@@ -18,7 +24,10 @@ const THEME_LIST = [
         textColor: "#DADADA"
     },
     {   
-        name: "Light",
+        displayName: "The Mian Special",
+        name: "light",
+        fontFamily: "monospace",
+        fontSize: "13px",
         backgroundColor: "white",
         comment: "black",
         tag: "#FC7C41",

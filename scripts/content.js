@@ -16,6 +16,7 @@ function main () {
     this.setOnElementClick(collapsibleRoot);
 }
 
+
 //Collapse a node
 function collapse(node){
     node.children[0].className = "expanded hidden";
