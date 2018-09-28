@@ -1,20 +1,32 @@
-[id^=custom-header]{
-    background-color: rgb(48, 114, 214);
+#custom-header{
     position: fixed;
+    top: 10px;
+    right: 0px;
+    display: flex;
 }
 
 #custom-header-expanded{
-    right: 10px;
-    border-bottom-right-radius: 10px;
+    display: flex;
+    border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    position: relative;
+    background-color: rgb(48, 114, 214);
 }
 
 #custom-header-collapsed{
-    height: 40px;
-    width: 60px;
-    right: 10px;
-    border-bottom-right-radius: 10px;
+    display: none;
+}
+
+#custom-header-tab{
+    border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    position: relative;
+    background-color: red;
+    display: flex;
+    background-color: rgb(48, 114, 214);
+    height: 60px;
+    width: 40px;
+    top: 20px;
 }
 
 .pretty-print{

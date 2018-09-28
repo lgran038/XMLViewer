@@ -3,21 +3,37 @@ window.addEventListener ("load", main, false);
 
 //Only begins running when window loads
 function main () {
-    //this.addStyles();
+    this.addStyles();
     this.loadActiveTheme();
+    this.buildHeader();
+}
 
-    var header = document.createElement("div");
-    header.id = "custom-header-expanded";
+function buildHeader(){
     var body = document.getElementsByTagName("body")[0];
     //Remove original styling of container.
     body.childNodes[1].style.marginTop = "0px";
     body.childNodes[1].style.paddingTop = "10px";
 
-    //header.appendChild(this.collapsedHeader());
-    //header.appendChild(this.expandedHeader());
+    var header = document.createElement("div");
+    header.id = "custom-header";
+    var content = document.createElement("div");
+    content.id = "custom-header-expanded";
+    var headerTab = document.createElement("div");
+    headerTab.id = "custom-header-tab";
 
+    //Add Icon link element
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "/img/cog-solid.svg";
+    link.integrity
+    document.getElementsByTagName("head")[0].appendChild(link);
+
+    headerTab.appendChild(document.createTextNode("HI"));
+    content.appendChild(this.themeSelector());
+    header.appendChild(headerTab);
+    header.appendChild(content);
+    
     //Add header
-    header.appendChild(this.themeSelector());
     body.insertBefore(header, body.childNodes[1]);
 }
 
@@ -25,16 +41,19 @@ function main () {
 function addStyles(){
     var styleSheet = document.getElementsByTagName("style")[0];
     var styles = "";
-    styles += this.createStyle("body", [
-        {prop: "color", value: "black"},
-        {prop: "background-color", value: "white"},
-        {prop: "font-family", value: "monospace"},
-        {prop: 'font-size', value: "13px"}
-    ]);
-    styles += this.createStyle(".html-tag", [{prop: "color", value: "#881280"}]);
-    styles += this.createStyle(".html-attribute-name", [{prop: "color", value: "#994500"}]);
-    styles += this.createStyle(".html-attribute-value", [{prop: "color", value: "#1A1AA6"}]);
-    styles += this.createStyle(".html-comment", [{prop: "color", value: "#236E25"}]);
+    for (t of THEME_LIST){
+        styles += this.createStyle("#body-" + t.name, [
+            {prop: "color", value: t.textColor},
+            {prop: "background-color", value: t.backgroundColor},
+            {prop: "font-family", value: t.fontFamily},
+            {prop: 'font-size', value: t.fontSize}
+        ]);
+        styles += this.createStyle("#html-tag-" + t.name, [{prop: "color", value: t.tag}]);
+        styles += this.createStyle("#html-attribute-name-" + t.name, [{prop: "color", value: t.attrName}]);
+        styles += this.createStyle("#html-attribute-value-" + t.name, [{prop: "color", value: t.attrValue}]);
+        styles += this.createStyle("#html-comment-" + t.name, [{prop: "color", value: t.comment}]);
+    }
+    
     var styleSheet = document.getElementsByTagName("style")[0];
     styleSheet.appendChild(document.createTextNode(styles));
 }
@@ -43,7 +62,7 @@ function addStyles(){
 function loadActiveTheme(){
     chrome.storage.local.get(['activeTheme'], function(result){
         updateTheme(result.activeTheme);
-        //highlightTheme(result.activeTheme.name);
+        highlightTheme(result.activeTheme.name);
     });
 }
 
@@ -69,10 +88,11 @@ function onThemeClick(e){
     }
     
     selectedTheme = THEME_LIST[themeIndex];
-    chrome.storage.local.set({selectedTheme});
-
-    this.highlightTheme(selectedTheme.name);
-
+    if(selectedTheme){
+        chrome.storage.local.set({selectedTheme}, function(){
+            highlightTheme(selectedTheme.name);
+        });
+    };
 }
 
 //When Save Theme is clicked, set the current theme to the selected theme
@@ -86,113 +106,34 @@ function onThemeSaveClick(e){
 
 //Replaces the styles in style sheet with those that match the theme requested
 function updateTheme(theme){
-    var styleSheet = document.getElementsByTagName("style")[0];
-    var styles = styleSheet.innerHTML;
-    var body = this.getStyle("body");
-    var tag = this.getStyle(".html-tag");
-    var attrName = this.getStyle(".html-attribute-name");
-    var attrValue = this.getStyle(".html-attribute-value");
-    var comment = this.getStyle(".html-comment");
+    document.getElementsByTagName("body")[0].id = "body-" + theme.name;
+    var tags = document.getElementsByClassName("html-tag");
+    var attrNames = document.getElementsByClassName("html-attribute-name");
+    var attrValues = document.getElementsByClassName("html-attribute-value");
+    var comments = document.getElementsByClassName("html-comment");
 
-    styles.replace(body, "");
-    styles.replace(tag, "");
-    styles.replace(attrName, "");
-    styles.replace(attrValue, "");
-    styles.replace(comment, "");
-
-    var styles = "";
-    styles += this.createStyle("body", [
-        {prop: "color", value: theme.textColor},
-        {prop: "background-color", value: theme.backgroundColor},
-        {prop: "font-family", value: theme.fontFamily},
-        {prop: 'font-size', value: theme.fontSize}
-    ]);
-    styles += this.createStyle(".html-tag", [{prop: "color", value: theme.tag}]);
-    styles += this.createStyle(".html-attribute-name", [{prop: "color", value: theme.attrName}]);
-    styles += this.createStyle(".html-attribute-value", [{prop: "color", value: theme.attrValue}]);
-    styles += this.createStyle(".html-comment", [{prop: "color", value: theme.comment}]);
-    styleSheet.appendChild(document.createTextNode(styles));
+    for (t of tags)
+        t.id = "html-tag-" + theme.name;
+    for (n of attrNames)
+        n.id = "html-attribute-name-" + theme.name;
+    for (v of attrValues)
+        v.id = "html-attribute-value-" + theme.name;
+    for (c of comments)
+        c.id = "html-comment-" + theme.name;
 }
 
+//Highlights the selected theme
 function highlightTheme(themeName){
-    var targetThemeClass = "#theme-" + themeName;
-    var themeIndex = 0;
-    var theme = {};
-    for (t of THEME_LIST){
-        if (t.name === themeName){
-            theme = t;
-            break;
-        }
-        themeIndex++;
-    }
-    targetThemeClass += "_" + themeIndex;
-    // themeStyle = this.getStyle(themeClass);
-    var styleSheet = document.getElementsByTagName("style")[0];
-    var styles = styleSheet.innerHTML;
-    var newStyles = "";
+    var themes = document.querySelectorAll('[id^=theme-]');
     var index = 0;
-
-
-    //REPLACING THEMES NOT WORKING/////////////////////////////////////////////////////////////////
-    styles.replace(this.getStyle("#theme-classic_0"),"");
-    styles.replace(this.getStyle("#theme-dark_1"),"");
-    styles.replace(this.getStyle("#theme-light_2"),"");
-    
-    console.log(this.getStyle("#theme-classic_0"));
-    console.log(this.getStyle("#theme-dark_1"));
-    console.log(this.getStyle("#theme-light_2"));
-    
-    for (t of THEME_LIST){
-        var themeClass = "#theme-" + t.name + "_" + index;
-        if(themeClass === targetThemeClass){
-            newStyles += this.createStyle(themeClass, [
-                {prop: "background-color", value: t.backgroundColor},
-                {prop: "font-family", value: t.fontFamily},
-                {prop: "font-size", value: t.fontSize},
-                {prop: "border-width", value: "3pt"}
-            ]);
-        }else{
-            newStyles += this.createStyle(themeClass, [
-                {prop: "background-color", value: t.backgroundColor},
-                {prop: "font-family", value: t.fontFamily},
-                {prop: "font-size", value: t.fontSize},
-                {prop: "border-width", value: "1pt"}
-            ]);
-        }
+    for (t of themes){
+        var name = t.id.split("-")[1].split("_")[0];
+        if (name === themeName)
+            t.id = "theme-" + name + "_" + index + "-highlighted";
+        else
+            t.id = "theme-" + name + "_" + index;
         index++;
-        
     }
-    
-    styleSheet.appendChild(document.createTextNode(newStyles));
-    
-}
-
-//Gets a style from the style sheet
-function getStyle(className){
-    var styles = document.getElementsByTagName("style")[0];
-    var start = styles.innerHTML.indexOf(className);
-    var end = styles.innerHTML.indexOf("}", start);
-    var result = styles.innerHTML.substring(start, end + 1);
-    return result;
-}
-
-//MIGHT BE WORKING BUT POTENTIALLY BROKEN
-//Currently unused.
-function getStyleObj(className){
-    var styleString = this.getStyle(className);
-    //Insides
-    var content = styleString.substring(styleString.indexOf("{") + 1, styleString.indexOf("}"));
-    var noWhite = content.replace(/\s/g,'');
-    noWhite = noWhite.substring(0, noWhite.length -1);
-    var splitContent = noWhite.split(";");
-    var styleObject = [];
-    for(s of splitContent){
-        var prop = s.split(":")[0];
-        var value = s.split(":")[1];
-        styleObject.push({prop, value});
-    }
-
-    return styleObject;
 }
 
 //Builds theme selector
@@ -223,10 +164,18 @@ function themeSelector(){
     for(item of THEME_LIST){
         var theme = document.createElement("div");
         theme.id = "theme-" + item.name + "_" + themeCounter++;
+        //Non highlighted Theme
         styles += "\n#" + theme.id + " {\n\tbackground-color: " + item.backgroundColor + 
         ";\n\tfont-family: " + item.fontFamily + 
         ";\n\tfont-size: " + item.fontSize + 
         ";\n\tborder-width: 1pt;\n}\n";
+
+        //Highlighted Theme
+        styles += "\n#" + theme.id + "-highlighted {\n\tbackground-color: " + item.backgroundColor + 
+        ";\n\tfont-family: " + item.fontFamily + 
+        ";\n\tfont-size: " + item.fontSize + 
+        ";\n\tborder-width: 3pt;\n}\n";
+
         theme.addEventListener('click', function(e){onThemeClick(e)});
 
         var comment = document.createElement("div");
