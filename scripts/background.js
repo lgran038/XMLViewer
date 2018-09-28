@@ -10,13 +10,12 @@ function collapseChildren(e){
     });
 }
 
-//Collapse Children context menu item
-function expandChildren(e){
+function collapseSiblings(e){
     chrome.storage.local.get(['childRgtClkIDValid', 'childClickedID'], function(result){
         chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             chrome.tabs.sendMessage(tabs[0].id, {
                 type: "contextMenu",
-                message: "expandChildren",
+                message: "collapseSiblings",
                 result: result});
           });
     });
@@ -26,16 +25,17 @@ function expandChildren(e){
 var urlPatterns = ["http://*/*.xml", "https://*/*.xml", "file:///*.xml"];
 //Creates context menu for Collapse Children
 chrome.contextMenus.create({
-    title: "Collapse Children", 
+    title: "Collapse/Expand Children", 
     contexts:["page"], 
     onclick: collapseChildren,
     documentUrlPatterns: urlPatterns
 });
 
+//Creates context menu for Collapse Children
 chrome.contextMenus.create({
-    title: "Expand Children", 
+    title: "Collapse/Expand Sibling", 
     contexts:["page"], 
-    onclick: expandChildren,
+    onclick: collapseSiblings,
     documentUrlPatterns: urlPatterns
 });
 

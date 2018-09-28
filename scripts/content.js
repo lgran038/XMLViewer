@@ -18,9 +18,14 @@ function main () {
 
 
 //Collapse a node
-function collapse(node){
-    node.children[0].className = "expanded hidden";
-    node.children[1].className = "collapsed";
+function collapseOrExpand(node){
+    if (node.children[0].className === "expanded"){
+        node.children[0].className = "expanded hidden";
+        node.children[1].className = "collapsed";
+    }else if (node.children[1].className === "collapsed"){
+        node.children[0].className = "expanded";
+        node.children[1].className = "collapsed hidden";
+    }
 }
 
 //Expand a node
@@ -94,6 +99,7 @@ chrome.runtime.onMessage.addListener(function(e) {
 });
 
 function contextMenuClick(e){
+    console.log(e.message);
     switch(e.message){
         case "collapseChildren": //Listening for collapseChildren message
             //Reset childRgtClkIDValid
@@ -105,22 +111,23 @@ function contextMenuClick(e){
                 var children = this.getCollapsibleChildren(node);
                 //Collapse children
                 for (child of children)
-                    this.collapse(child);
+                    this.collapseOrExpand(child);
             }
             break;
-        case "expandChildren": //Listening for expandChildren message
+        case "collapseSiblings": //Listening for collapseSiblings message
             //Reset childRgtClkIDValid
             chrome.storage.local.set({childRgtClkIDValid: false});
 
             //Expand children if child exists and is valid
             if (e.result.childClickedID && e.result.childRgtClkIDValid){
                 var node = document.getElementById(e.result.childClickedID);
-                //Expand itself if collapsed
-                this.expand(node);
-                var children = this.getCollapsibleChildren(node);
-                //Expand children
-                for (child of children)
-                    this.expand(child);
+                var parentNode = node.parentNode.parentNode.parentNode;
+                if (parentNode){
+                    var siblings = this.getCollapsibleChildren(parentNode);
+                    //Expand children
+                    for (sibling of siblings)
+                        this.collapseOrExpand(sibling);
+                }
             }
             break;
         default:
