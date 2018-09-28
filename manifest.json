@@ -11,11 +11,12 @@
     "storage"
   ],
   "browser_action": {
-    "default_icon": "img/icon.png",
+    "default_icon": "images/icon.png",
     "default_title": "XMLViewer Popup"
   },
   "web_accessible_resources": [
-    "styles/popup.css"
+    "styles/popup.css",
+    "images/*"
   ],
   "background": {
     "scripts": ["scripts/background.js"]

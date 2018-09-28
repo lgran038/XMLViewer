@@ -1,32 +1,46 @@
-#custom-header{
+[id^=custom-header]{
+    display: flex;
     position: fixed;
     top: 10px;
-    right: 0px;
-    display: flex;
-}
-
-#custom-header-expanded{
-    display: flex;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    position: relative;
-    background-color: rgb(48, 114, 214);
 }
 
 #custom-header-collapsed{
-    display: none;
+    right: -300px;
+    transition: right 0.4s ease;
 }
 
-#custom-header-tab{
+#custom-header-expanded{
+    right: 0px;
+    transition: right 0.4s ease;
+}
+
+#custom-content{
+    display: flex;
+    width: 300px;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     position: relative;
-    background-color: red;
+    background-color: rgb(48, 114, 214);
+}
+
+#custom-tab{
+    position: relative;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
     display: flex;
     background-color: rgb(48, 114, 214);
-    height: 60px;
-    width: 40px;
+    height: 40px;
+    width: 30px;
     top: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+#settings-icon{
+    display: flex;
+    background: url('chrome-extension://__MSG_@@extension_id__/images/cog-solid.svg');
+    height: 20px;
+    width: 20px;
 }
 
 .pretty-print{

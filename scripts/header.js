@@ -1,11 +1,12 @@
 //Wait until doc is loaded, then begin execution
 window.addEventListener ("load", main, false);
 
+this.buildHeader();
+
 //Only begins running when window loads
 function main () {
     this.addStyles();
     this.loadActiveTheme();
-    this.buildHeader();
 }
 
 function buildHeader(){
@@ -15,26 +16,35 @@ function buildHeader(){
     body.childNodes[1].style.paddingTop = "10px";
 
     var header = document.createElement("div");
-    header.id = "custom-header";
+    header.id = "custom-header-collapsed";
     var content = document.createElement("div");
-    content.id = "custom-header-expanded";
+    content.id = "custom-content";
     var headerTab = document.createElement("div");
-    headerTab.id = "custom-header-tab";
+    headerTab.id = "custom-tab";
 
     //Add Icon link element
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "/img/cog-solid.svg";
-    link.integrity
-    document.getElementsByTagName("head")[0].appendChild(link);
+    var settingsIcon = document.createElement("img");
+    settingsIcon.id = "settings-icon";
+    settingsIcon.addEventListener('click', function(){onSettingsClick()});
 
-    headerTab.appendChild(document.createTextNode("HI"));
+    headerTab.appendChild(settingsIcon);
     content.appendChild(this.themeSelector());
     header.appendChild(headerTab);
     header.appendChild(content);
     
     //Add header
     body.insertBefore(header, body.childNodes[1]);
+}
+
+function onSettingsClick(){
+    var content = document.querySelectorAll("[id^=custom-header-]")[0];
+    if (content.id === "custom-header-expanded"){
+        content.id = "custom-header-collapsed";
+    }
+    else if (content.id === "custom-header-collapsed"){
+        content.id = "custom-header-expanded";
+    }
+
 }
 
 //Adds style elements to style sheet, initially default.
@@ -61,8 +71,10 @@ function addStyles(){
 //Loads the theme saved by user. Default is theme is classic
 function loadActiveTheme(){
     chrome.storage.local.get(['activeTheme'], function(result){
-        updateTheme(result.activeTheme);
-        highlightTheme(result.activeTheme.name);
+        if (result.activeTheme){
+            updateTheme(result.activeTheme);
+            highlightTheme(result.activeTheme.name);
+        }
     });
 }
 
@@ -96,7 +108,7 @@ function onThemeClick(e){
 }
 
 //When Save Theme is clicked, set the current theme to the selected theme
-function onThemeSaveClick(e){
+function onThemeSaveClick(){
     chrome.storage.local.get(['selectedTheme'], function(result){
         chrome.storage.local.set({activeTheme: result.selectedTheme});
 
