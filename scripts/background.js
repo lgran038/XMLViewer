@@ -33,7 +33,7 @@ chrome.contextMenus.create({
 
 //Creates context menu for Collapse Children
 chrome.contextMenus.create({
-    title: "Collapse/Expand Sibling", 
+    title: "Collapse/Expand Siblings", 
     contexts:["page"], 
     onclick: collapseSiblings,
     documentUrlPatterns: urlPatterns
