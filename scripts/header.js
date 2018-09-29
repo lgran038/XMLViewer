@@ -52,16 +52,16 @@ function addStyles(){
     var styleSheet = document.getElementsByTagName("style")[0];
     var styles = "";
     for (t of THEME_LIST){
-        styles += this.createStyle("#body-" + t.name, [
+        styles += this.createStyle("body." + t.name, [
             {prop: "color", value: t.textColor},
             {prop: "background-color", value: t.backgroundColor},
             {prop: "font-family", value: t.fontFamily},
             {prop: 'font-size', value: t.fontSize}
         ]);
-        styles += this.createStyle("#html-tag-" + t.name, [{prop: "color", value: t.tag}]);
-        styles += this.createStyle("#html-attribute-name-" + t.name, [{prop: "color", value: t.attrName}]);
-        styles += this.createStyle("#html-attribute-value-" + t.name, [{prop: "color", value: t.attrValue}]);
-        styles += this.createStyle("#html-comment-" + t.name, [{prop: "color", value: t.comment}]);
+        styles += this.createStyle("body." + t.name + " .html-tag", [{prop: "color", value: t.tag}]);
+        styles += this.createStyle("body." + t.name + " .html-attribute-name", [{prop: "color", value: t.attrName}]);
+        styles += this.createStyle("body." + t.name + " .html-attribute-value", [{prop: "color", value: t.attrValue}]);
+        styles += this.createStyle("body." + t.name + " .html-comment", [{prop: "color", value: t.comment}]);
     }
     
     var styleSheet = document.getElementsByTagName("style")[0];
@@ -116,22 +116,9 @@ function onThemeSaveClick(){
     });
 }
 
-//Replaces the styles in style sheet with those that match the theme requested
+//Change the class name of the body to the requested theme.
 function updateTheme(theme){
-    document.getElementsByTagName("body")[0].id = "body-" + theme.name;
-    var tags = document.getElementsByClassName("html-tag");
-    var attrNames = document.getElementsByClassName("html-attribute-name");
-    var attrValues = document.getElementsByClassName("html-attribute-value");
-    var comments = document.getElementsByClassName("html-comment");
-
-    for (t of tags)
-        t.id = "html-tag-" + theme.name;
-    for (n of attrNames)
-        n.id = "html-attribute-name-" + theme.name;
-    for (v of attrValues)
-        v.id = "html-attribute-value-" + theme.name;
-    for (c of comments)
-        c.id = "html-comment-" + theme.name;
+    document.getElementsByTagName("body")[0].className = theme.name;
 }
 
 //Highlights the selected theme
