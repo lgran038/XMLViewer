@@ -25,7 +25,7 @@ function buildHeader(){
     //Add Icon link element
     var settingsIcon = document.createElement("img");
     settingsIcon.id = "settings-icon";
-    settingsIcon.addEventListener('click', function(){onSettingsClick()});
+    headerTab.addEventListener('click', function(){onSettingsClick()});
 
     headerTab.appendChild(settingsIcon);
     content.appendChild(this.themeSelector());
@@ -44,7 +44,7 @@ function onSettingsClick(){
     else if (content.id === "custom-header-collapsed"){
         content.id = "custom-header-expanded";
     }
-
+    
 }
 
 //Adds style elements to style sheet, initially default.

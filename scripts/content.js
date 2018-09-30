@@ -85,8 +85,7 @@ function onElementClick(e){
     }
 }
 
-//Listends for messages from background script
-//NOTE: SHOULD REFACTOR. ON MESSAGE LISTENER SHOULD MAKE FUNCTION CALLS NOT APPLY LOGIC
+//Listens for messages from background script
 chrome.runtime.onMessage.addListener(function(e) {
     switch(e.type){
         case "contextMenu":
