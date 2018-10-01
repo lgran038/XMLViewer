@@ -16,16 +16,10 @@ function main () {
     this.setOnElementClick(collapsibleRoot);
 }
 
-
 //Collapse a node
-function collapseOrExpand(node){
-    if (node.children[0].className === "expanded"){
-        node.children[0].className = "expanded hidden";
-        node.children[1].className = "collapsed";
-    }else if (node.children[1].className === "collapsed"){
-        node.children[0].className = "expanded";
-        node.children[1].className = "collapsed hidden";
-    }
+function collapse(node){
+    node.children[0].className = "expanded hidden";
+    node.children[1].className = "collapsed";
 }
 
 //Expand a node
@@ -110,9 +104,23 @@ function contextMenuClick(e){
                 var children = this.getCollapsibleChildren(node);
                 //Collapse children
                 for (child of children)
-                    this.collapseOrExpand(child);
+                    this.collapse(child);
             }
             break;
+        case "expandChildren": //Listening for expandChildren message
+        //Reset childRgtClkIDValid
+        chrome.storage.local.set({childRgtClkIDValid: false});
+
+        //Expand children if child exists and is valid
+        if (e.result.childClickedID && e.result.childRgtClkIDValid){
+            var node = document.getElementById(e.result.childClickedID);
+            this.expand(node);
+            var children = this.getCollapsibleChildren(node);
+            //Collapse children
+            for (child of children)
+                this.expand(child);
+        }
+        break;
         case "collapseSiblings": //Listening for collapseSiblings message
             //Reset childRgtClkIDValid
             chrome.storage.local.set({childRgtClkIDValid: false});
@@ -125,10 +133,26 @@ function contextMenuClick(e){
                     var siblings = this.getCollapsibleChildren(parentNode);
                     //Expand children
                     for (sibling of siblings)
-                        this.collapseOrExpand(sibling);
+                        this.collapse(sibling);
                 }
             }
             break;
+        case "expandSiblings": //Listening for expandSiblings message
+        //Reset childRgtClkIDValid
+        chrome.storage.local.set({childRgtClkIDValid: false});
+
+        //Expand children if child exists and is valid
+        if (e.result.childClickedID && e.result.childRgtClkIDValid){
+            var node = document.getElementById(e.result.childClickedID);
+            var parentNode = node.parentNode.parentNode.parentNode;
+            if (parentNode){
+                var siblings = this.getCollapsibleChildren(parentNode);
+                //Expand children
+                for (sibling of siblings)
+                    this.expand(sibling);
+            }
+        }
+        break;
         default:
             console.log("Message not recognized: ", e);
     }
