@@ -50,7 +50,7 @@ function expandSiblings(e){
 var urlPatterns = ["http://*/*.xml", "https://*/*.xml", "file:///*.xml"];
 //Creates context menu for Collapse Children
 chrome.contextMenus.create({
-    title: "Collapse Children", 
+    title: "Collapse Children             Ctrl+Left Click", 
     contexts:["page"], 
     onclick: collapseChildren,
     documentUrlPatterns: urlPatterns
@@ -58,7 +58,7 @@ chrome.contextMenus.create({
 
 //Creates context menu for Expand Children
 chrome.contextMenus.create({
-    title: "Expand Children", 
+    title: "Expand Children                Alt+Left Click", 
     contexts:["page"], 
     onclick: expandChildren,
     documentUrlPatterns: urlPatterns
@@ -66,7 +66,7 @@ chrome.contextMenus.create({
 
 //Creates context menu for Collapse Siblings
 chrome.contextMenus.create({
-    title: "Collapse Siblings", 
+    title: "Collapse Siblings     Ctrl+Right Dbl Click", 
     contexts:["page"], 
     onclick: collapseSiblings,
     documentUrlPatterns: urlPatterns
@@ -74,7 +74,7 @@ chrome.contextMenus.create({
 
 //Creates context menu for Expand Children
 chrome.contextMenus.create({
-    title: "Expand Siblings", 
+    title: "Expand Siblings           Alt+Left Dbl Click", 
     contexts:["page"], 
     onclick: expandSiblings,
     documentUrlPatterns: urlPatterns

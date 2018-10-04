@@ -28,6 +28,45 @@ function expand(node){
     node.children[1].className = "collapsed hidden";
 }
 
+//Collapses Children
+function collapseChildren(node){
+    var children = this.getCollapsibleChildren(node);
+    //Collapse children
+    for (child of children)
+    this.collapse(child);
+}
+
+//Expands Children
+function expandChildren(node){
+    this.expand(node);
+    var children = this.getCollapsibleChildren(node);
+    //Expand children
+    for (child of children)
+        this.expand(child);
+}
+
+//Collapses Siblings
+function collapseSiblings(node){
+    var parentNode = node.parentNode.parentNode.parentNode;
+    if (parentNode){
+        var siblings = this.getCollapsibleChildren(parentNode);
+        //Collpase siblings
+        for (sibling of siblings)
+            this.collapse(sibling);
+    }
+}
+
+//Expands Siblings
+function expandSiblings(node){
+    var parentNode = node.parentNode.parentNode.parentNode;
+    if (parentNode){
+        var siblings = this.getCollapsibleChildren(parentNode);
+        //Expand siblings
+        for (sibling of siblings)
+            this.expand(sibling);
+    }
+}
+
 //Returns all collapsible children
 //Input node must be collapsible
 function getCollapsibleChildren(node){
@@ -54,8 +93,10 @@ function setOnElementClick(node){
 
         for (child of collapsible){
             if (child.className === "collapsible"){
-                child.children[0].children[0].onmousedown = (e) => this.onElementClick(e);
-                child.children[1].children[0].onmousedown = (e) => this.onElementClick(e);
+                child.children[0].children[0].onclick = (e) => this.onElementClick(e);
+                child.children[1].children[0].onclick = (e) => this.onElementClick(e);
+                child.children[0].children[0].ondblclick = (e) => this.onDoubleClick(e);
+                child.children[1].children[0].ondblclick = (e) => this.onDoubleClick(e);
                 
                 this.setOnElementClick(child);
             }
@@ -65,19 +106,50 @@ function setOnElementClick(node){
 
 //Triggers when element is clicked
 function onElementClick(e){
-
-    //If collapsible element is right clicked
-    var id = e.path[3].id;
-    if(e.which === 3){
-        //Set the id of child clicked on
-        chrome.storage.local.set({childClickedID: id}, function(){
-            chrome.runtime.sendMessage({
-                childClickedID: id,
-                message: "childRightClicked"
+    if(e.type === "click"){
+        //If collapsible element is right clicked
+        var id = e.path[3].id;
+        if(e.which === 1){
+            //Collapse Children on ctrl+left_click
+            if(e.ctrlKey){
+                var node = document.getElementById(id);
+                this.collapseChildren(node);
+            }
+            //Expand Children on alt+left_click
+            if(e.altKey){
+                var node = document.getElementById(id);
+                this.expandChildren(node);
+            }
+        }
+        if(e.which === 3){
+            //Set the id of child clicked on
+            chrome.storage.local.set({childClickedID: id}, function(){
+                chrome.runtime.sendMessage({
+                    childClickedID: id,
+                    message: "childRightClicked"
+                });
             });
-        });
+        }
     }
 }
+
+function onDoubleClick(e){
+    if(e.type === "dblclick"){
+        //If collapsible element is right clicked
+        var id = e.path[3].id;
+        if(e.which === 1){
+            if(e.ctrlKey){
+                var node = document.getElementById(id);
+                this.collapseSiblings(node);
+            }
+            if(e.altKey){
+                var node = document.getElementById(id);
+                this.expandSiblings(node);
+            }
+        }
+    }
+}
+
 
 //Listens for messages from background script
 chrome.runtime.onMessage.addListener(function(e) {
@@ -101,10 +173,7 @@ function contextMenuClick(e){
             //Collapse children if child exists and is valid
             if (e.result.childClickedID && e.result.childRgtClkIDValid){
                 var node = document.getElementById(e.result.childClickedID);
-                var children = this.getCollapsibleChildren(node);
-                //Collapse children
-                for (child of children)
-                    this.collapse(child);
+                this.collapseChildren(node);
             }
             break;
         case "expandChildren": //Listening for expandChildren message
@@ -114,11 +183,7 @@ function contextMenuClick(e){
         //Expand children if child exists and is valid
         if (e.result.childClickedID && e.result.childRgtClkIDValid){
             var node = document.getElementById(e.result.childClickedID);
-            this.expand(node);
-            var children = this.getCollapsibleChildren(node);
-            //Collapse children
-            for (child of children)
-                this.expand(child);
+            this.expandChildren(node);
         }
         break;
         case "collapseSiblings": //Listening for collapseSiblings message
@@ -128,13 +193,7 @@ function contextMenuClick(e){
             //Expand children if child exists and is valid
             if (e.result.childClickedID && e.result.childRgtClkIDValid){
                 var node = document.getElementById(e.result.childClickedID);
-                var parentNode = node.parentNode.parentNode.parentNode;
-                if (parentNode){
-                    var siblings = this.getCollapsibleChildren(parentNode);
-                    //Expand children
-                    for (sibling of siblings)
-                        this.collapse(sibling);
-                }
+                this.collapseSiblings(node);
             }
             break;
         case "expandSiblings": //Listening for expandSiblings message
@@ -144,13 +203,7 @@ function contextMenuClick(e){
         //Expand children if child exists and is valid
         if (e.result.childClickedID && e.result.childRgtClkIDValid){
             var node = document.getElementById(e.result.childClickedID);
-            var parentNode = node.parentNode.parentNode.parentNode;
-            if (parentNode){
-                var siblings = this.getCollapsibleChildren(parentNode);
-                //Expand children
-                for (sibling of siblings)
-                    this.expand(sibling);
-            }
+            this.expandSiblings(node);
         }
         break;
         default:
