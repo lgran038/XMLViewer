@@ -9,23 +9,26 @@ header.parentNode.removeChild(header);
 //Only begins running when window loads
 function main () {
     var collapsibleRoot = document.getElementById("collapsible0");
-    
-    //Setting root's onclick
-    collapsibleRoot.children[0].children[0].onmousedown = (e) => this.onElementClick(e);
-    collapsibleRoot.children[1].children[0].onmousedown = (e) => this.onElementClick(e);
+
     this.setOnElementClick(collapsibleRoot);
 }
 
 //Collapse a node
 function collapse(node){
-    node.children[0].className = "expanded hidden";
-    node.children[1].className = "collapsed";
+    //First check if the node is collapsible
+    if (node.children[0].className === "expanded" || node.children[0].className === "expanded hidden"){
+        node.children[0].className = "expanded hidden";
+        node.children[1].className = "collapsed";
+    }
 }
 
 //Expand a node
 function expand(node){
-    node.children[0].className = "expanded";
-    node.children[1].className = "collapsed hidden";
+    //First check if the node is collapsible
+    if (node.children[0].className === "expanded" || node.children[0].className === "expanded hidden"){
+        node.children[0].className = "expanded";
+        node.children[1].className = "collapsed hidden";
+    }
 }
 
 //Collapses Children
@@ -86,20 +89,13 @@ function getCollapsibleChildren(node){
 
 //On click method for nodes
 function setOnElementClick(node){
-    
-    //Set on click only for collapsible nodes
+    //Set on click for line elements
     if(node && node.className === "collapsible"){
-        var collapsible = node.children[0].children[1].children;
+        var lines = document.getElementsByClassName("html-tag");
 
-        for (child of collapsible){
-            if (child.className === "collapsible"){
-                child.children[0].children[0].onclick = (e) => this.onElementClick(e);
-                child.children[1].children[0].onclick = (e) => this.onElementClick(e);
-                child.children[0].children[0].ondblclick = (e) => this.onDoubleClick(e);
-                child.children[1].children[0].ondblclick = (e) => this.onDoubleClick(e);
-                
-                this.setOnElementClick(child);
-            }
+        for (line of lines){
+            line.addEventListener('click', makeDoubleClick(), false);
+            line.onmousedown = (e) => this.onRightClick(e);
         }
     }
 }
@@ -107,48 +103,111 @@ function setOnElementClick(node){
 //Triggers when element is clicked
 function onElementClick(e){
     if(e.type === "click"){
-        //If collapsible element is right clicked
-        var id = e.path[3].id;
-        if(e.which === 1){
-            //Collapse Children on ctrl+left_click
-            if(e.ctrlKey){
-                var node = document.getElementById(id);
-                this.collapseChildren(node);
+        if (e.path[3].className === "collapsible"){
+            //Left Click
+            if(e.which === 1){
+                //Collapse Children on ctrl+left_click
+                if(e.ctrlKey){
+                    var node = e.path[3];
+                    this.collapseChildren(node);
+                }
+                //Expand Children on alt+left_click
+                if(e.altKey){
+                    var node = e.path[3];
+                    this.expandChildren(node);
+                }
             }
-            //Expand Children on alt+left_click
-            if(e.altKey){
-                var node = document.getElementById(id);
-                this.expandChildren(node);
-            }
-        }
-        if(e.which === 3){
-            //Set the id of child clicked on
-            chrome.storage.local.set({childClickedID: id}, function(){
-                chrome.runtime.sendMessage({
-                    childClickedID: id,
-                    message: "childRightClicked"
-                });
-            });
         }
     }
 }
 
+//Triggers when element is double clicked
 function onDoubleClick(e){
-    if(e.type === "dblclick"){
-        //If collapsible element is right clicked
-        var id = e.path[3].id;
-        if(e.which === 1){
-            if(e.ctrlKey){
-                var node = document.getElementById(id);
-                this.collapseSiblings(node);
+    var id;
+    //If the chosen node is collapsible
+    if (e.path[3].className === "collapsible"){
+        id = e.path[3].id;
+        //Collapse Siblings
+        if(e.ctrlKey){
+            var node = document.getElementById(id);
+            this.collapseSiblings(node);
+        }
+        //ExpandSiblings
+        if(e.altKey){
+            var node = document.getElementById(id);
+            this.expandSiblings(node);
+        }
+    }
+
+    //If the chosen node is not collapsible
+    else{
+        for (elt of e.path){
+            if (elt.className === "collapsible"){
+                id = elt.id;
+                break;
             }
-            if(e.altKey){
-                var node = document.getElementById(id);
-                this.expandSiblings(node);
-            }
+        }
+        //Collapse Children of Parent (Collapse Siblings of target)
+        if(e.ctrlKey){
+            var node = document.getElementById(id);
+            this.collapseChildren(node);
+        }
+        //Expand Children of Parent (Expand Siblings of target)
+        if(e.altKey){
+            var node = document.getElementById(id);
+            this.expandChildren(node);
         }
     }
 }
+
+function onRightClick(e){
+    //Right Click
+    if(e.which === 3){
+        //Set the id of child clicked on
+        var id;
+        //If chosen node is Collapsible
+        if (e.path[3].className === "collapsible")
+            id = e.path[3].id;
+        //If chosen node is not collapsible
+        else{
+            for (elt of e.path){
+                if (elt.className === "collapsible"){
+                    id = elt.id;
+                    break;
+                }
+            }
+            id += "_isSibling";
+        }
+        chrome.storage.local.set({childClickedID: id}, function(){
+            chrome.runtime.sendMessage({
+                childClickedID: e.path[3].id,
+                message: "childRightClicked"
+            });
+        });
+    }
+}
+
+//Only either fires a single click or a double click.
+//When double click is pressed, no single clicks fire.
+var makeDoubleClick = function(e) {
+    var clicks = 0;
+    var timeout;
+
+    return function (e) {
+        clicks++;
+        if (clicks == 1) {
+            timeout = setTimeout(function () {
+                onElementClick(e);
+                clicks = 0;
+            }, 250);
+        } else {
+            clearTimeout(timeout);
+            onDoubleClick(e);
+            clicks = 0;
+        }
+    };
+}
+
 
 
 //Listens for messages from background script
@@ -164,14 +223,10 @@ chrome.runtime.onMessage.addListener(function(e) {
 });
 
 function contextMenuClick(e){
-    console.log(e.message);
     switch(e.message){
         case "collapseChildren": //Listening for collapseChildren message
-            //Reset childRgtClkIDValid
-            chrome.storage.local.set({childRgtClkIDValid: false});
-
             //Collapse children if child exists and is valid
-            if (e.result.childClickedID && e.result.childRgtClkIDValid){
+            if (e.result.childClickedID && e.result.childRgtClkIDValid && (e.result.childClickedID.indexOf("_")<0)){
                 var node = document.getElementById(e.result.childClickedID);
                 this.collapseChildren(node);
             }
@@ -181,7 +236,7 @@ function contextMenuClick(e){
         chrome.storage.local.set({childRgtClkIDValid: false});
 
         //Expand children if child exists and is valid
-        if (e.result.childClickedID && e.result.childRgtClkIDValid){
+        if (e.result.childClickedID && e.result.childRgtClkIDValid && (e.result.childClickedID.indexOf("_")<0)){
             var node = document.getElementById(e.result.childClickedID);
             this.expandChildren(node);
         }
@@ -190,20 +245,26 @@ function contextMenuClick(e){
             //Reset childRgtClkIDValid
             chrome.storage.local.set({childRgtClkIDValid: false});
 
-            //Expand children if child exists and is valid
-            if (e.result.childClickedID && e.result.childRgtClkIDValid){
+            //Collapse Siblings if they exist
+            if (e.result.childClickedID && e.result.childRgtClkIDValid  && (e.result.childClickedID.indexOf("_")<0)){
                 var node = document.getElementById(e.result.childClickedID);
                 this.collapseSiblings(node);
+            }else if(e.result.childClickedID && e.result.childRgtClkIDValid){
+                var node = document.getElementById(e.result.childClickedID.substring(0, e.result.childClickedID.indexOf("_")));
+                this.collapseChildren(node);
             }
             break;
         case "expandSiblings": //Listening for expandSiblings message
         //Reset childRgtClkIDValid
         chrome.storage.local.set({childRgtClkIDValid: false});
 
-        //Expand children if child exists and is valid
-        if (e.result.childClickedID && e.result.childRgtClkIDValid){
+        //Expand Siblings if they exist
+        if (e.result.childClickedID && e.result.childRgtClkIDValid  && (e.result.childClickedID.indexOf("_")<0)){
             var node = document.getElementById(e.result.childClickedID);
             this.expandSiblings(node);
+        }else if(e.result.childClickedID && e.result.childRgtClkIDValid){
+            var node = document.getElementById(e.result.childClickedID.substring(0,  e.result.childClickedID.indexOf("_")));
+            this.expandChildren(node);
         }
         break;
         default:
