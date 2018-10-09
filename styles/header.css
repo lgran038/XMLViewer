@@ -2,6 +2,7 @@
     display: flex;
     position: fixed;
     top: 10px;
+    user-select: none;
 }
 
 #custom-header-collapsed{
