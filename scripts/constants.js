@@ -16,23 +16,23 @@ const THEME_LIST = [
         name: "dark",
         fontFamily: "consolas",
         fontSize: "13px",
-        backgroundColor: "#1B1D24",
-        comment: "#4ECC35",
-        tag: "#FC7C41",
-        attrName: "#69A9F1",
-        attrValue: "#FADA80",
-        textColor: "#DADADA"
+        backgroundColor: "#1E1E1E",
+        comment: "#6A9955",
+        tag: "#569cd6",
+        attrName: "#9CDCFE",
+        attrValue: "#ce9178",
+        textColor: "white"
     },
     {   
-        displayName: "The Mian Special",
+        displayName: "Light",
         name: "light",
-        fontFamily: "monospace",
+        fontFamily: "consolas",
         fontSize: "13px",
-        backgroundColor: "white",
-        comment: "black",
-        tag: "#FC7C41",
-        attrName: "#69A9F1",
-        attrValue: "#298829",
-        textColor: "black"
+        backgroundColor: "#fef8ec",
+        comment: "#7060eb",
+        tag: "#e97749",
+        attrName: "#33b1ff",
+        attrValue: "#16b673",
+        textColor: "#5b858b"
     }
 ]

@@ -35,7 +35,9 @@
       "js": [
         "scripts/constants.js",
         "scripts/content.js",
-        "scripts/header.js"
+        "scripts/header.js",
+        "scripts/xmlToJson.js",
+        "scripts/xPath.js"
       ],
       "run_at": "document_end"
     }

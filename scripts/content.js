@@ -103,19 +103,20 @@ function setOnElementClick(node){
 //Triggers when element is clicked
 function onElementClick(e){
     if(e.type === "click"){
-        if (e.path[3].className === "collapsible"){
-            //Left Click
-            if(e.which === 1){
-                //Collapse Children on ctrl+left_click
-                if(e.ctrlKey){
-                    var node = e.path[3];
-                    this.collapseChildren(node);
-                }
-                //Expand Children on alt+left_click
-                if(e.altKey){
-                    var node = e.path[3];
-                    this.expandChildren(node);
-                }
+        //Left Click
+        if(e.which === 1){
+            //Collapse Children on ctrl+left_click
+            if(e.ctrlKey && e.path[3].className === "collapsible"){
+                var node = e.path[3];
+                this.collapseChildren(node);
+            }
+            //Expand Children on alt+left_click
+            if(e.altKey && e.path[3].className === "collapsible"){
+                var node = e.path[3];
+                this.expandChildren(node);
+            }
+            if (e.path[0].className === "html-tag" || e.path[0].className === "html-attribute-name"){
+                pathToNode(e.path[0]);
             }
         }
     }
