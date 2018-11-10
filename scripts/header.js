@@ -6,6 +6,8 @@ this.buildHeader();
 //Only begins running when window loads
 function main () {
     this.addStyles();
+    //Replace Pretty-Print styling
+    document.getElementsByClassName("pretty-print")[0].className = 'pretty-print-custom';
     this.loadActiveTheme();
 }
 
@@ -51,6 +53,12 @@ function onSettingsClick(){
 function addStyles(){
     var styleSheet = document.getElementsByTagName("style")[0];
     var styles = "";
+
+    styles += customPrettyPrint = this.createStyle(".pretty-print-custom",[
+        {prop: "margin-top", value: "1em"},
+        {prop: "margin-left", value: "20px"}
+    ]);
+
     for (t of THEME_LIST){
         styles += this.createStyle("body." + t.name, [
             {prop: "color", value: t.textColor},
@@ -64,7 +72,6 @@ function addStyles(){
         styles += this.createStyle("body." + t.name + " .html-comment", [{prop: "color", value: t.comment}]);
     }
     
-    var styleSheet = document.getElementsByTagName("style")[0];
     styleSheet.appendChild(document.createTextNode(styles));
 }
 

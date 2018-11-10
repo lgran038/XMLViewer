@@ -31,7 +31,7 @@ const THEME_LIST = [
         backgroundColor: "#fef8ec",
         comment: "#7060eb",
         tag: "#e97749",
-        attrName: "#33b1ff",
+        attrName: "#569cd6",
         attrValue: "#16b673",
         textColor: "#5b858b"
     }

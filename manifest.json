@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "XMLViewer",
+  "name": "FleXML",
   "description": "View XMLs",
   "version": "1.0",
 
@@ -35,9 +35,7 @@
       "js": [
         "scripts/constants.js",
         "scripts/content.js",
-        "scripts/header.js",
-        "scripts/xmlToJson.js",
-        "scripts/xPath.js"
+        "scripts/header.js"
       ],
       "run_at": "document_end"
     }

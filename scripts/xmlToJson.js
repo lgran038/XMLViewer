@@ -4,8 +4,6 @@ window.addEventListener ("load", main, false);
 //Only begins running when window loads
 function main () {
     var inputXml = document.getElementById("webkit-xml-viewer-source-xml").children[0];
-
-    //console.log(JSON.stringify(this.xmlToJson(inputXml), null, 2));
 }
 
 function xmlToJson(xml){
