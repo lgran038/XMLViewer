@@ -66,7 +66,7 @@ chrome.contextMenus.create({
 
 //Creates context menu for Collapse Siblings
 chrome.contextMenus.create({
-    title: "Collapse Siblings     Ctrl+Right Dbl Click", 
+    title: "Collapse Siblings       Ctrl+Left Dbl Click", 
     contexts:["page"], 
     onclick: collapseSiblings,
     documentUrlPatterns: urlPatterns
@@ -74,7 +74,7 @@ chrome.contextMenus.create({
 
 //Creates context menu for Expand Children
 chrome.contextMenus.create({
-    title: "Expand Siblings           Alt+Left Dbl Click", 
+    title: "Expand Siblings          Alt+Left Dbl Click", 
     contexts:["page"], 
     onclick: expandSiblings,
     documentUrlPatterns: urlPatterns

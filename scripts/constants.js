@@ -28,7 +28,7 @@ const THEME_LIST = [
         name: "light",
         fontFamily: "consolas",
         fontSize: "13px",
-        backgroundColor: "#fef8ec",
+        backgroundColor: "#FDF6E3",
         comment: "#7060eb",
         tag: "#e97749",
         attrName: "#569cd6",
