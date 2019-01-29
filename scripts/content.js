@@ -115,9 +115,6 @@ function onElementClick(e){
                 var node = e.path[3];
                 this.expandChildren(node);
             }
-            if (e.path[0].className === "html-tag" || e.path[0].className === "html-attribute-name"){
-                pathToNode(e.path[0]);
-            }
         }
     }
 }
