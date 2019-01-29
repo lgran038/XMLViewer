@@ -9,86 +9,11 @@ header.parentNode.removeChild(header);
 //Only begins running when window loads
 function main () {
     var collapsibleRoot = document.getElementById("collapsible0");
-
-    this.setOnElementClick(collapsibleRoot);
-}
-
-//Collapse a node
-function collapse(node){
-    //First check if the node is collapsible
-    if (node.children[0].className === "expanded" || node.children[0].className === "expanded hidden"){
-        node.children[0].className = "expanded hidden";
-        node.children[1].className = "collapsed";
-    }
-}
-
-//Expand a node
-function expand(node){
-    //First check if the node is collapsible
-    if (node.children[0].className === "expanded" || node.children[0].className === "expanded hidden"){
-        node.children[0].className = "expanded";
-        node.children[1].className = "collapsed hidden";
-    }
-}
-
-//Collapses Children
-function collapseChildren(node){
-    var children = this.getCollapsibleChildren(node);
-    //Collapse children
-    for (child of children)
-    this.collapse(child);
-}
-
-//Expands Children
-function expandChildren(node){
-    this.expand(node);
-    var children = this.getCollapsibleChildren(node);
-    //Expand children
-    for (child of children)
-        this.expand(child);
-}
-
-//Collapses Siblings
-function collapseSiblings(node){
-    var parentNode = node.parentNode.parentNode.parentNode;
-    if (parentNode){
-        var siblings = this.getCollapsibleChildren(parentNode);
-        //Collpase siblings
-        for (sibling of siblings)
-            this.collapse(sibling);
-    }
-}
-
-//Expands Siblings
-function expandSiblings(node){
-    var parentNode = node.parentNode.parentNode.parentNode;
-    if (parentNode){
-        var siblings = this.getCollapsibleChildren(parentNode);
-        //Expand siblings
-        for (sibling of siblings)
-            this.expand(sibling);
-    }
-}
-
-//Returns all collapsible children
-//Input node must be collapsible
-function getCollapsibleChildren(node){
-    var childList = [];
-    if(node && node.className === "collapsible"){
-        //node.children[0].children[1] is collapsible content
-        var collapsible = node.children[0].children[1].children;
-        
-        for (child of collapsible){
-            if (child.className === "collapsible"){
-                childList.push(child);
-            }
-        }
-    }
-    return childList;
+    this.setEventListeners(collapsibleRoot);
 }
 
 //On click method for nodes
-function setOnElementClick(node){
+function setEventListeners(node){
     //Set on click for line elements
     if(node && node.className === "collapsible"){
         var lines = document.getElementsByClassName("html-tag");
@@ -96,8 +21,19 @@ function setOnElementClick(node){
         for (line of lines){
             line.addEventListener('click', makeDoubleClick(), false);
             line.onmousedown = (e) => this.onRightClick(e);
+            line.addEventListener('mouseover', (e) => onMouseOver(e));
         }
     }
+
+    
+}
+
+//On Mouse Over
+function onMouseOver(e){
+    // Trying to determine path of hovered node
+
+    this.buildXPath(e);
+
 }
 
 //Triggers when element is clicked
