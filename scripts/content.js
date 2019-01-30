@@ -10,6 +10,11 @@ header.parentNode.removeChild(header);
 function main () {
     var collapsibleRoot = document.getElementById("collapsible0");
     this.setEventListeners(collapsibleRoot);
+
+    document.getElementsByClassName("pretty-print")[0].addEventListener('click', (e) => {
+        var content = document.querySelectorAll("[id^=custom-header-]")[0];
+        content.id = "custom-header-collapsed";
+    }, true);
 }
 
 //On click method for nodes
@@ -24,15 +29,13 @@ function setEventListeners(node){
             line.addEventListener('mouseover', (e) => onMouseOver(e));
         }
     }
-
-    
 }
 
 //On Mouse Over
 function onMouseOver(e){
     // Trying to determine path of hovered node
 
-    this.buildXPath(e);
+    this.xPathMain(e);
 
 }
 
