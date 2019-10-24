@@ -2,20 +2,28 @@
   "manifest_version": 2,
 
   "name": "FleXML",
-  "description": "View XMLs",
-  "version": "1.0",
+  "short_name": "FleXML",
+  "description": "Navigate XMLs more efficiently and view them in style",
+  "version": "1.0.0",
+  "author": "Luis Granados",
 
   "permissions": [
-    "tabs",
+    "activeTab",
     "contextMenus",
     "storage"
   ],
   "browser_action": {
-    "default_icon": "images/icon.png",
-    "default_title": "XMLViewer Popup"
+    "default_icon": "images/logo128px.png",
+    "default_title": "FleXML"
+  },
+  "icons": { 
+    "16": "images/logo16px.png",
+    "32": "images/logo32px.png",
+    "48": "images/logo48px.png",
+    "128": "images/logo128px.png",
+    "512": "images/logo512px.png"
   },
   "web_accessible_resources": [
-    "styles/popup.css",
     "images/*"
   ],
   "background": {
