@@ -44,6 +44,8 @@
       ],
       "js": [
         "scripts/constants.js",
+        "scripts/xpath.js",
+        "scripts/collapseExpand.js",
         "scripts/content.js",
         "scripts/header.js"
       ],
