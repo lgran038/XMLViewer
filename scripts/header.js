@@ -8,6 +8,8 @@ function main () {
     this.addStyles();
     //Replace Pretty-Print styling
     document.getElementsByClassName("pretty-print")[0].className = 'pretty-print-custom';
+    //On click anywhere else, close header
+    document.getElementsByClassName("pretty-print-custom")[0].addEventListener('click', function(){onBodyClick()});
     this.loadActiveTheme();
 }
 
@@ -33,11 +35,12 @@ function buildHeader(){
     content.appendChild(this.themeSelector());
     header.appendChild(headerTab);
     header.appendChild(content);
-    
+
     //Add header
     body.insertBefore(header, body.childNodes[1]);
 }
 
+//Toggle settings
 function onSettingsClick(){
     var content = document.querySelectorAll("[id^=custom-header-]")[0];
     if (content.id === "custom-header-expanded"){
@@ -47,6 +50,14 @@ function onSettingsClick(){
         content.id = "custom-header-expanded";
     }
     
+}
+
+//Close settings when body is clicked
+function onBodyClick(){
+    var content = document.querySelectorAll("[id^=custom-header-]")[0];
+    if (content) {
+        content.id = "custom-header-collapsed";
+    }
 }
 
 //Adds style elements to style sheet, initially default.
@@ -112,10 +123,7 @@ function onThemeClick(e){
             highlightTheme(selectedTheme.name);
         });
     };
-}
 
-//When Save Theme is clicked, set the current theme to the selected theme
-function onThemeSaveClick(){
     chrome.storage.local.get(['selectedTheme'], function(result){
         chrome.storage.local.set({activeTheme: result.selectedTheme});
 
@@ -148,7 +156,6 @@ function themeSelector(){
     var groupHeader = document.createElement("div");
     var groupBody = document.createElement("div");
     var groupHeaderTitle = document.createElement("div");
-    var saveButton = document.createElement("div");
     var styleSheet = document.getElementsByTagName("style")[0];
     var styles = "";
 
@@ -156,14 +163,10 @@ function themeSelector(){
     groupHeader.id = "group-header";
     groupBody.id = "group-body";
     groupHeaderTitle.id = "group-header-title";
-    saveButton.id = "button-save";
 
     groupHeaderTitle.appendChild(document.createTextNode("Themes"));
-    saveButton.appendChild(document.createTextNode("Save Theme"));
     groupHeader.appendChild(groupHeaderTitle);
-    groupHeader.appendChild(saveButton);
     group.appendChild(groupHeader);
-    saveButton.addEventListener('click', function(e){onThemeSaveClick(e)});
 
     var themeCounter = 0;
     //Builds themes

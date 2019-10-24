@@ -91,9 +91,3 @@
     flex: 1;
     flex-direction: column;
 }
-
-#button-save{
-    display: flex;
-    padding: 0px 10px 0px 10px;
-    user-select: none;
-}
