@@ -16,8 +16,8 @@ function main () {
 function buildHeader(){
     var body = document.getElementsByTagName("body")[0];
     //Remove original styling of container.
-    body.childNodes[1].style.marginTop = "0px";
-    body.childNodes[1].style.paddingTop = "10px";
+    //body.childNodes[1].style.marginTop = "0px";
+    //body.childNodes[1].style.paddingTop = "10px";
 
     var header = document.createElement("div");
     header.id = "custom-header-collapsed";

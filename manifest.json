@@ -43,6 +43,7 @@
         "file:///*.xml"
       ],
       "js": [
+        "scripts/utils.js",
         "scripts/constants.js",
         "scripts/content.js",
         "scripts/header.js"
