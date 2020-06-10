@@ -1,13 +1,13 @@
 //Wait until doc is loaded, then begin execution
 window.addEventListener ("load", main, false);
+//Replace Pretty-Print styling
+document.getElementsByClassName("pretty-print")[0].className = 'pretty-print-custom';
 
 this.buildHeader();
 
 //Only begins running when window loads
 function main () {
     this.addStyles();
-    //Replace Pretty-Print styling
-    document.getElementsByClassName("pretty-print")[0].className = 'pretty-print-custom';
     //On click anywhere else, close header
     document.getElementsByClassName("pretty-print-custom")[0].addEventListener('click', function(){onBodyClick()});
     this.loadActiveTheme();

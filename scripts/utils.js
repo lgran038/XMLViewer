@@ -1,4 +1,13 @@
 /**
+ * Creates elemtent with the class name provided
+ */
+Document.prototype.createElementWithClass = function (name, className) {
+    let elem = document.createElement(name);
+    elem.setAttribute("class", className);
+    return elem;
+};
+
+/**
  * Self node of this element within the source xml tree
  */
 Element.prototype.xNode = null;
@@ -9,11 +18,19 @@ Element.prototype.xNode = null;
 Element.prototype.xParent = null;
 
 /**
+ * Array of child nodes of this element within the source xml tree
+ */
+Element.prototype.xChildren = [];
+
+/**
  * Next sibling node of this element withing the source xml tree
- * 
- * Will remain temporarily unused
  */
 Element.prototype.xNextSibling = null;
+
+/**
+ * Previous sibling node of this element withing the source xml tree
+ */
+Element.prototype.xPreviousSibling = null;
 
 /**
  * If true, then Element has a comment within Element.childNodes

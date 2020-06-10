@@ -1,1 +1,15 @@
-<test firstAttr='abc' secondAttr='123'>sldf dfgdflgh</test>
+<folder0 firstAttr='abc' secondAttr='123'>
+    <folder1>
+        <folder2>
+            <someNode>hello from inside folder 2</someNode>
+        </folder2>
+    </folder1>
+    <folder3>
+        <folder4>
+            <someNode>hello from inside folder 4</someNode>
+        </folder4>
+    </folder3>
+    <folder5>
+        <someNode>hello from inside folder 5</someNode>
+    </folder5>
+</folder0>

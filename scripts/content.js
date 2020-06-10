@@ -16,118 +16,18 @@ function main () {
     console.log(xmlRoot.xParent);
 
     //this.setOnElementClick(collapsibleRoot);
-    var parser = new XmlParser(xmlRoot);
+
+    var prettyPrintCustom = document.getElementsByClassName("pretty-print-custom")[0];
+    var parser = new XParser(xmlRoot);
+    console.log("pretty print")
+    console.log(prettyPrintCustom);
+    prettyPrintCustom.removeChild(prettyPrintCustom.children[0]);
+    prettyPrintCustom.appendChild(parser.parsedTree);
+    // TODO: figure out what is wrong here. best guess is that it is not drawing the new node.
+    //parser.reload();
+    //location.reload();
+    
 }
-
-let XmlParser = function (xmlRoot)  {
-
-    this.buildOpenTag = function (sourceNode, parentNode, xParent, selfClosing) {
-        let openTag = document.createElement("span");
-        openTag.setAttribute("class", "html-tag");
-        openTag.appendChild(document.createTextNode("<" + sourceNode.tagName));
-        openTag.xNode = sourceNode;
-        openTag.xParent = xParent;
-        
-        for (let attrNode of sourceNode.attributes) {
-            let attr = document.createElement("span");
-            attr.setAttribute("class", "html-attribute");
-            attr.xNode = attrNode;
-            attr.xParent = sourceNode;
-            
-            let attrName = document.createElement("span");
-            attrName.setAttribute("html-attribute-name");
-            attrName.appendChild(document.createTextNode(attrNode.name));
-
-            let attrValue = document.createElement("span");
-            attrValue.setAttribute("html-attribute-value");
-            attrValue.appendChild(document.createTextNode(attrNode.value));
-
-            attr.appendChild(attrName);
-            attr.appendChild(document.createTextNode('=\"'));
-            attr.appendChild(attrValue);
-            attr.appendChild(document.createTextNode('\"'));
-
-            openTag.appendChild(attr);            
-        }
-
-        if (selfClosing)
-            openTag.appendChild(document.createTextNode("/>"));
-        else
-            openTag.appendChild(document.createTextNode(">"));
-
-        parentNode.appendChild(openTag);
-    };
-
-    this.buildCloseTag = function (sourceNode, parentNode) {
-        let closeTag = document.createElement("span");
-        closeTag.setAttribute("class", "html-tag");
-        closeTag.appendChild(document.createTextNode("</" + sourceNode.tagName + ">"));
-
-        parentNode.appendChild(sourceNode);
-    }
-
-    this.buildTextNode = function (sourceNode, parentNode) {
-        let textNode = document.createElement("span");
-        textNode.appendChild(document.createTextNode(sourceNode.nodeValue));
-
-        parentNode.appendChild(textNode);
-    }
-
-    // TODO: work on folder flow. Non folder flow is tentatively complete
-    this.buildElement = function (sourceNode, parentNode, xParent) {
-        let htmlTagLine = document.createElement("div");
-        htmlTagLine.setAttribute("class", "line");
-
-        let textNodes = [];
-        if (!sourceNode.children) {
-            if (sourceNode.childNodes.length) {
-                textNodes = sourceNode.getNonEmptyTexts(true);
-            }
-            
-            // builds simple element node with no folder
-            if (!sourceNode.hasComments) {
-                this.buildOpenTag(sourceNode, htmlTagLine, xParent, textNodes.length == 0);
-                if (textNodes.length) {
-                    for (let node of textNodes) {
-                        this.buildTextNode(node, htmlTagLine);
-                    }
-                    
-                    this.buildCloseTag(sourceNode, htmlTagLine);
-                }
-            }
-        }
-
-        if (sourceNode.children || sourceNode.hasComments) {
-            // builds element with folder
-        }
-    };
-
-    this.init = function () {
-        console.log("childNodes");
-        console.log(this.root.childNodes);
-        console.log("children");
-        console.log(this.root.children);
-        console.log(this.root.attributes);
-        
-        if (this.root.children) {
-            /*
-            for (let child of this.root.childNodes) {
-
-            }
-            */
-        }
-        else {
-            this.buildBasicElement(this.root, this.parsedNode);
-        }
-        
-    }
-
-    this.root = xmlRoot;
-    this.parsedNode = document.getElementsByClassName("pretty-print-cutrom")[0];
-    this.init();
-    console.log("output");
-    console.log(this.parsedNode);
-};
 
 //Collapse a node
 function collapse(node){

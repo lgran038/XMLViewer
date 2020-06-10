@@ -44,6 +44,7 @@
       ],
       "js": [
         "scripts/utils.js",
+        "scripts/xParser.js",
         "scripts/constants.js",
         "scripts/content.js",
         "scripts/header.js"
